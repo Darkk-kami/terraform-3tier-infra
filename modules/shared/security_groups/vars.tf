@@ -14,6 +14,6 @@ variable "allow_internet_access" {
 }
 
 variable "security_group_ref_id" {
-  type = string
+  type    = string
   default = null
 }

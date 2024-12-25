@@ -15,6 +15,15 @@ resource "aws_autoscaling_group" "web_servers" {
   health_check_grace_period = 300
   force_delete              = true
   wait_for_capacity_timeout = "0"
+  default_cooldown          = "0"
+
+  instance_refresh {
+    strategy = "Rolling"
+    preferences {
+      instance_warmup        = "90"
+      min_healthy_percentage = 50
+    }
+  }
 }
 
 resource "aws_autoscaling_policy" "scale_up" {

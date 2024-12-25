@@ -11,6 +11,10 @@ variable "dns_hostnames" {
 variable "desired_azs" {
   description = "Number of desired Availability Zones"
   type        = number
+  validation {
+    condition     = var.desired_azs >= 2
+    error_message = "The number of AZs must be at least 2."
+  }
 }
 
 variable "public_subnets_no" {
@@ -21,6 +25,11 @@ variable "public_subnets_no" {
 variable "private_subnets_no" {
   description = "Number of private subnets needed"
   type        = number
+
+  validation {
+    condition     = var.private_subnets_no >= 2
+    error_message = "The number of private subnets must be at least 2."
+  }
 }
 
 variable "inbound_ports" {
@@ -34,4 +43,10 @@ variable "environment" {
   description = "The environment for the VPC (e.g., dev, prod, staging)"
   type        = string
   default     = "dev"
+}
+
+variable "region" {
+  description = "The Region for the VPC"
+  type        = string
+  default     = "us-east-1"
 }

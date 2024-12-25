@@ -42,3 +42,13 @@ variable "unhealthy_threshold" {
   type        = number
   default     = 2
 }
+
+
+variable "acm_certificate_arn" {
+  default = null
+}
+
+variable "use_ssl" {
+  type    = bool
+  default = true
+}

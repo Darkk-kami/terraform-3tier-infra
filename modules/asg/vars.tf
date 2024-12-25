@@ -7,13 +7,13 @@ variable "desired_capacity" {
 variable "max_size" {
   description = "The maximum size of the Auto Scaling group."
   type        = number
-  default     = 5
+  default     = 3
 }
 
 variable "min_size" {
   description = "The minimum size of the Auto Scaling group."
   type        = number
-  default     = 1
+  default     = 2
 }
 
 variable "private_subnet_ids" {

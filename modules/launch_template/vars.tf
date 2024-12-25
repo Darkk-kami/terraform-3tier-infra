@@ -21,5 +21,14 @@ variable "alb_security_group_id" {
 }
 
 variable "subnet" {
+}
 
+variable "instance_profile" {
+  description = "instance profile to be associated with instances"
+  default     = null
+}
+
+variable "rds_identifier" {
+  type    = string
+  default = null
 }

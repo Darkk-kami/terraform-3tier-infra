@@ -1,3 +1,16 @@
+terraform {
+  required_providers {
+    aws = {
+      source                = "hashicorp/aws"
+      configuration_aliases = [aws]
+    }
+  }
+}
+
+data "aws_region" "region" {
+  provider = aws
+}
+
 # Create a Virtual Private Cloud (VPC)
 resource "aws_vpc" "vpc" {
   cidr_block           = var.cidr_block
@@ -106,7 +119,6 @@ resource "aws_route_table" "route_tables" {
   }
 }
 
-
 # Associate public subnets with the route table
 resource "aws_route_table_association" "public_route_table_association" {
   # Loop through public subnets to associate each with the public route table
@@ -120,4 +132,11 @@ resource "aws_route_table_association" "private_route_table_association" {
   for_each       = { for key, subnet in local.subnet_definitions : key => aws_subnet.subnets[key] if subnet.name == "private" }
   route_table_id = aws_route_table.route_tables["1"].id
   subnet_id      = each.value.id
+}
+
+##  Gateway
+resource "aws_vpc_endpoint" "s3_gateway" {
+  vpc_id          = aws_vpc.vpc.id
+  service_name    = "com.amazonaws.${data.aws_region.region.name}.s3"
+  route_table_ids = [aws_route_table.route_tables["1"].id]
 }
