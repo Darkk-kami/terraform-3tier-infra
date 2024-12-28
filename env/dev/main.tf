@@ -173,7 +173,3 @@ module "failover" {
   primary_rds_cloud_watch_alarm   = module.cloud_watch.primary_rds_connections_alarm
   secondary_rds_cloud_watch_alarm = module.cloud_watch.secondary_rds_replica_lag_alarm
 }
-
-import {
-  
-}
