@@ -3,6 +3,12 @@ variable "vpc_id" {
   type        = string
 }
 
+variable "inbound_traffic" {
+  description = "Cidr range to allow inbound traffic from"
+  type        = string
+  default     = "0.0.0.0/0"
+}
+
 variable "inbound_ports" {
   description = "List of inbound ports to allow on the security group"
   type        = list(number)

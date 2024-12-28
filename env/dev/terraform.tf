@@ -13,7 +13,9 @@ terraform {
     key    = "terraform/3tier"
     region = "us-east-1"
   }
+
 }
+
 
 
 provider "aws" {

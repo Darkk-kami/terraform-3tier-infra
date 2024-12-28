@@ -1,5 +1,5 @@
 module "policy" {
-  source        = "./policy"
+  source        = "../shared/policies"
   secret_name   = var.secret_name
   region        = var.region
   source_bucket = var.source_bucket
@@ -21,19 +21,9 @@ resource "aws_iam_role" "secret_role" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "attach_secret_policy" {
-  role       = aws_iam_role.secret_role.name
-  policy_arn = module.policy.secret_policy.arn
-}
-
-resource "aws_iam_role_policy_attachment" "attach_rds_describe_policy" {
-  role       = aws_iam_role.secret_role.name
-  policy_arn = module.policy.rds_describe_policy.arn
-}
-
 resource "aws_iam_role_policy_attachment" "attach_s3_policy" {
   role       = aws_iam_role.secret_role.name
-  policy_arn = module.policy.ec2_to_s3_policy.arn
+  policy_arn = module.policy.ec2_poilicy.arn
 }
 
 # Instance profile to use the role

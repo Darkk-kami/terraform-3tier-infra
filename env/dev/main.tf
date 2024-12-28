@@ -60,7 +60,7 @@ module "rds" {
   db_password                  = module.instance_profile.secret.DB_PASSWORD
   db_username                  = module.instance_profile.secret.DB_USERNAME
   rds_identifier               = var.rds_identifier
-  web_server_security_group_id = module.launch_template.web_server_security_group_id
+  ref_security_group_id        = module.launch_template.web_server_security_group_id
   vpc_id                       = module.vpc.vpc_id
   private_subnet_ids           = module.vpc.private_subnet_ids
   environment                  = var.environment
@@ -109,7 +109,7 @@ module "rds_secondary" {
   db_password                  = module.instance_profile.secret.DB_PASSWORD
   db_username                  = module.instance_profile.secret.DB_USERNAME
   rds_identifier               = var.rds_identifier
-  web_server_security_group_id = module.launch_template.web_server_security_group_id
+  ref_security_group_id        = null
   vpc_id                       = module.vpc_secondary.vpc_id
   private_subnet_ids           = module.vpc_secondary.private_subnet_ids
   environment                  = var.environment
@@ -121,6 +121,8 @@ module "rds_secondary" {
   providers = {
     aws = aws.failover
   }
+
+  primary_vpc_cidr_block = module.vpc.vpc_cidr
 }
 
 
@@ -131,6 +133,12 @@ module "vpc_peering" {
   source        = "../../modules/multi-region/vpc_peering"
   vpc_requester = module.vpc.vpc_id
   vpc_accepter  = module.vpc_secondary.vpc_id
+
+  vpc_requester_cidr = module.vpc.vpc_cidr
+  requester_route_table_id = module.vpc.private_route_table_ids[0]
+
+  vpc_accepter_cidr = module.vpc_secondary.vpc_cidr
+  accepter_route_table_id = module.vpc_secondary.private_route_table_ids[0]
 
   providers = {
     aws.primary   = aws.primary
@@ -164,4 +172,8 @@ module "failover" {
   secondary_db                    = module.rds_secondary.rds_instance
   primary_rds_cloud_watch_alarm   = module.cloud_watch.primary_rds_connections_alarm
   secondary_rds_cloud_watch_alarm = module.cloud_watch.secondary_rds_replica_lag_alarm
+}
+
+import {
+  
 }

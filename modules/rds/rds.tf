@@ -8,12 +8,12 @@ terraform {
 }
 
 module "security_group" {
-  count                 = var.create_replica ? 0 : 1
   source                = "../shared/security_groups"
   vpc_id                = var.vpc_id
-  allow_internet_access = false
+  allow_internet_access = var.create_replica ? true : false
+  inbound_traffic       = var.create_replica ? var.primary_vpc_cidr_block : null
   inbound_ports         = var.inbound_ports
-  security_group_ref_id = var.web_server_security_group_id
+  security_group_ref_id = var.create_replica ? null : var.ref_security_group_id
 }
 
 resource "aws_db_subnet_group" "main" {
@@ -35,7 +35,7 @@ resource "aws_db_instance" "db" {
   password               = var.create_replica ? null : var.db_password
   parameter_group_name   = "default.mysql8.0"
   publicly_accessible    = false
-  vpc_security_group_ids = var.create_replica ? null : [module.security_group[0].security_group_id]
+  vpc_security_group_ids = [module.security_group.security_group_id]
   db_subnet_group_name   = aws_db_subnet_group.main.name
   replicate_source_db    = var.create_replica ? var.source_db : null
 

@@ -31,11 +31,6 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "allow_internet_access" {
-  description = "Whether the security group allows internet access"
-  type        = bool
-  default     = false
-}
 
 variable "inbound_ports" {
   description = "A list of ports to allow inbound traffic for the security group"
@@ -43,7 +38,7 @@ variable "inbound_ports" {
   default     = [3306]
 }
 
-variable "web_server_security_group_id" {
+variable "ref_security_group_id" {
   description = "The security group ID for the web server to allow access"
   type        = string
 }
@@ -64,5 +59,10 @@ variable "instance_role" {
 }
 
 variable "source_db" {
+  default = null
+}
+
+variable "primary_vpc_cidr_block" {
+  type = string
   default = null
 }
